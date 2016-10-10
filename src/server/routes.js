@@ -1,5 +1,5 @@
-var sitesRoutes = require('./Sites/routes');
+var peopleRoutes = require('./people/routes');
 
 module.exports = function routes(app) {
-    app.use('/Sites', sitesRoutes);
+    app.use('/people', peopleRoutes);
 };

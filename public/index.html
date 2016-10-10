@@ -1,13 +1,6 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <link
-      href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'
-      rel='stylesheet'
-      type='text/css'>
-    <link
-      href='klarna-ui-css-components.css'
-      rel='stylesheet'
-      type='text/css'>
+  <head lang="en">
     <style>
       .search {
         margin: 0 auto;
@@ -25,35 +18,76 @@
         margin-top: 40px;
       }
     </style>
-    <title>Eksercise</title>
+
+    <!-- Init -->
+    <title>Yellow Pages</title>
+    <meta charset="UTF-8">
+
+    <!-- Load the css files-->
+    <link rel="stylesheet" href="vendor/bootstrap.css" />
+    <link rel="stylesheet" href="peopleModule/peopleCss.css" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link href='peopleModule/klarna-ui-css-components.css' rel='stylesheet' type='text/css'>
+
   </head>
-  <body>
-    <div class="search">
-      <div class="cui__input giant">
-        <label class="cui__input__label">
-            Type your search query
-        </label>
-        <input class="cui__input__input" />
+
+  <body ng-app="SearchApp">
+    <div class="container" ng-controller="peopleCtrl">
+
+      <header>
+        <h1 class="text-center main-title">Yellow Pages</h1>
+      </header>
+
+      <section class="search">
+      <div class="row">
+        <div class="cui__selector--direct__title">Enter your search query here:</div>
+        <br>
+        <form name="searchForm">
+          <div id="custom-search-input">
+            <div class="input-group col-md-12">
+              <input type="text" class="search-query form-control" name="searchField" placeholder="Search" ng-model="searchQuery" required/>
+              <span class="input-group-btn">
+                  <button class="btn btn-danger" type="button" ng-click="search()" ng-disabled="searchForm.$invalid">
+                      <span class="glyphicon glyphicon-search"></span>
+                  </button>
+              </span>
+            </div>
+            <p ng-show="searchForm.searchField.$error.required && searchForm.searchField.$dirty" class="error">Illegal query: Query is required.</p>
+          </div>
+        </form>
       </div>
+
+        <div class="results">
+          <div class="row cui__selector--direct title">
+            <h1 class="cui__selector--direct__title"> Search results </h1>
+            </div>
+          <div ng-if="peopleSearch.length == 0">
+            <h6>No results, please review your search or try a different one.</h6>
+          </div>
+          <div ng-if="peopleSearch.length > 0">
+
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <section class="search">
 
       <div class="results">
 
         <div class="cui__selector--direct title">
 
-          <h2 class="cui__selector--direct__title">
-            Search results
-          </h2>
-
           <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="anscombe.jpg" />
+          <img class="user-avatar" src="anscombe.jpg" />
 
-            <div class="cui__selector--direct__label">
-              Elizabeth Anscombe
-            </div>
+          <div class="cui__selector--direct__label">
+            Elizabeth Anscombe, 33
+          </div>
 
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
+          <p class="cui__selector--direct__description">
+            <b>Address:</b> Mackenzie Av, 34. Toronto, Canada. <b>Phone:</b> 3294-36000.
+          </p>
           </div>
 
           <div class="cui__selector--direct__item">
@@ -91,35 +125,17 @@
               Mackenzie Av, 34. Toronto, Canada.
             </p>
           </div>
-
-          <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="beauvoir.jpg" />
-
-            <div class="cui__selector--direct__label">
-              Simone de Beauvoir
-            </div>
-
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
-          </div>
-
-          <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="russell.jpg" />
-
-            <div class="cui__selector--direct__label">
-              Bertrand Arthur William Russell
-            </div>
-
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
-          </div>
-
-
         </div>
 
       </div>
-    </div>
+    </section>
+
+    <!-- Add all scripts -->
+    <script src="vendor/angular.js"></script>
+    <script src="appModule.js"></script>
+    <script src="peopleModule/peopleCtrl.js"></script>
+    <script src="peopleModule/peopleFactory.js"></script>
+    <script src="peopleModule/personDirective.js"></script>
+
   </body>
 </html>
