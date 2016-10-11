@@ -6,7 +6,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
     $scope.query.name = "";
     $scope.query.age = "";
     $scope.query.phone = "";
-    $scope.results = [];
 
     // Methods
 
@@ -37,12 +36,27 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
             if(/[0-9]+\-[0-9]/.test(searchConditionals[i])) {
                 $scope.query.phone = searchConditionals[i];
             }
+
+            // Check if it is a age
+            if (/^[0-9]{2}$/.test(searchConditionals[i])) {
+
+                var year = $scope.birthYearCalc(parseInt(searchConditionals[i]));
+                $scope.query.age = year;
+            }
         }
+
+        // Check if the query is defined
+        if ($scope.query == {}){$scope.results = [];}
 
         // Send the query to the server for results and save them
         getPeople.getPeopleByQuery($scope.query).success(function (res) {
-            debugger;
-            $scope.results = res;
+            $scope.peopleSearch = res;
+
+            // Calc the age
+            for (var i = 0; i< $scope.peopleSearch.length; i++)
+            {
+                $scope.peopleSearch[i].age = $scope.ageCalc($scope.peopleSearch[i].birthday);
+            }
         }).error(function (error) {
             console.log(error);
         })
@@ -51,6 +65,26 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
         /*$scope.query.name = "";
         $scope.query.age = "";
         $scope.query.phone = "";*/
+    }
+
+    $scope.birthYearCalc = function (oldAge) {
+         var birthYear;
+
+        // Calculate the age
+        var todayDate = new Date();
+        var todayYear = todayDate.getFullYear();
+
+        birthYear = todayYear - oldAge;
+
+        // Return value
+        return birthYear;
+    }
+
+    $scope.ageCalc = function (binaryDate) {
+        var age;
+
+        // Return value
+        return age;
     }
 
 }]);

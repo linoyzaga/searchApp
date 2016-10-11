@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var express = require('express');
-var people = require('./db').people;
+var People = require('./db').People;
 var router = express.Router();
 
 // Get all locations
@@ -14,7 +14,7 @@ router.post('/', function(req, res) {
     // Build the query
     var query = queryBuilder(name, age, phone);
 
-    people.find(function (err, docs) {
+    People.find(query, {limit: 10}, function (err, docs) {
 
         // Check the connection completed
         if (err) {
@@ -33,7 +33,7 @@ var queryBuilder = function (name, age, phone) {
 
     // Add the name condition
     if (name != "") {
-        queryToReturn.name = "/" + name + "/";
+        queryToReturn.name = new RegExp(name, "i")
     }
 
     // Add the phone condition
@@ -43,7 +43,17 @@ var queryBuilder = function (name, age, phone) {
 
     // Add the age condition
     if (age != "") {
-        queryToReturn.birthday = age;
+
+        var todayDate = new Date();
+        var todayMonth = todayDate.getMonth() + 1;
+        var todayDay = todayDate.getUTCDate();
+
+        // Calc the binary age
+        var beginOFYear = Date.parse(new Date(parseInt(01) + '/' + parseInt(01) + '/' + age)) / 10000;
+        var endOfYear = Date.parse(new Date(todayMonth + '/' + todayDay + '/' + age)) / 10000;
+
+        // Set the query for all the people who got this age in this year
+        queryToReturn.birthday = {$gte: beginOFYear, $lt: endOfYear};
     }
 
     // Return the new query

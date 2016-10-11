@@ -59,13 +59,25 @@
 
         <div class="results">
           <div class="row cui__selector--direct title">
-            <h1 class="cui__selector--direct__title"> Search results </h1>
+            <h1 class="cui__selector--direct__title"> Search results </h1> <br>
             </div>
           <div ng-if="peopleSearch.length == 0">
             <h6>No results, please review your search or try a different one.</h6>
           </div>
           <div ng-if="peopleSearch.length > 0">
+            <div ng-repeat="person in peopleSearch">
+              <div class="cui__selector--direct__item">
+                <img class="user-avatar" src="{{person.avatar_origin}}" />
 
+                <div class="cui__selector--direct__label">
+                  <b>{{person.name}}<b>, {{person.age}}
+                </div>
+
+                <p class="cui__selector--direct__description">
+                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}. <b>Phone:</b> {{person.phone}}.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -96,34 +108,6 @@
             <div class="cui__selector--direct__label">
               Alfred Tarski
             </div>
-
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
-          </div>
-
-          <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="quine.jpg" />
-
-            <div class="cui__selector--direct__label">
-              Willard Van Orman Quine
-            </div>
-
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
-          </div>
-
-          <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="nussbaum.jpg" />
-
-            <div class="cui__selector--direct__label">
-              Martha Craven Nussbaum
-            </div>
-
-            <p class="cui__selector--direct__description">
-              Mackenzie Av, 34. Toronto, Canada.
-            </p>
           </div>
         </div>
 
@@ -135,7 +119,6 @@
     <script src="appModule.js"></script>
     <script src="peopleModule/peopleCtrl.js"></script>
     <script src="peopleModule/peopleFactory.js"></script>
-    <script src="peopleModule/personDirective.js"></script>
 
   </body>
 </html>
