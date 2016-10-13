@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="peopleModule/peopleCss.css" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
     <link href='peopleModule/klarna-ui-css-components.css' rel='stylesheet' type='text/css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/ng-tags-input/3.1.1/ng-tags-input.min.css" type='text/css'/>
 
   </head>
 
@@ -45,6 +46,7 @@
         <form name="searchForm">
           <div id="custom-search-input">
             <div class="input-group col-md-12">
+              <!--<tags-input ng-model="tags" class="search-query form-control" placeholder="Search" display-property="name"</tags-input><br>-->
               <input type="text" class="search-query form-control" name="searchField" placeholder="Search" ng-model="searchQuery" required/>
               <span class="input-group-btn">
                   <button class="btn btn-danger" type="button" ng-click="search()" ng-disabled="searchForm.$invalid">
@@ -72,10 +74,7 @@
                   <b>{{person.name}}</b>, {{person.age}}
                 </div>
                 <p class="cui__selector--direct__description">
-                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}.
-                </p>
-                <p class="cui__selector--direct__description">
-                  <b>Phone:</b> {{person.phone}}.
+                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}. <b>Phone:</b> {{person.phone}}.
                 </p>
               </div>
             </div>
@@ -92,6 +91,7 @@
 
     <!-- Add all scripts -->
     <script src="vendor/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-tags-input/3.1.1/ng-tags-input.min.js"></script>
     <script src="vendor/moment.js"></script>
     <script src="appModule.js"></script>
     <script src="peopleModule/peopleCtrl.js"></script>

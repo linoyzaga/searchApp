@@ -15,14 +15,12 @@ router.post('/', function(req, res) {
     // Build the query
     var query = queryBuilder(name, age, phone);
 
-    People.find(query, {limit: 10}, function (err, docs) {
+    People.find(query, function (err, docs) {
 
         // Check if there is are any results for query
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
-
-        console.log(docs[0].name);
 
         // Init the queryResults variables
         queryResults.docs = docs;
@@ -87,13 +85,17 @@ var queryBuilder = function (name, age, phone) {
 
         var todayDate = new Date();
         var thisYear = todayDate.getFullYear();
-        var todayMonth = todayDate.getMonth() + 1;
-        var todayDay = todayDate.getUTCDate();
+        var thisMonth = todayDate.getMonth() + 1;
+        var thisDay = todayDate.getUTCDate();
         var birthYear = (thisYear - age);
 
-        // Calc the binary age
-        var beginOFYear = Date.parse(new Date('01' + '/' + '01' + '/' + birthYear)) / 1000;
-        var endOfYear = Date.parse(new Date(todayMonth + '/' + todayDay + '/' + birthYear)) / 1000;
+        var beginString = "01/01/" + birthYear;
+        var endString = thisMonth + "/" + thisDay +"/" + birthYear;
+
+        var beginOFYear = Date.parse(new Date(beginString)) / 1000;
+        var endOfYear = Date.parse(new Date(endString)) / 1000;
+
+        queryToReturn.birthday = {$gte: beginOFYear, $lt: endOfYear};
 
         // Set the query for all the people who got this age in this year
         queryToReturn.birthday = {$gte: beginOFYear, $lt: endOfYear};

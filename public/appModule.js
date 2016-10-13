@@ -1,2 +1,2 @@
 // Creating the app module
-var SearchApp = angular.module('SearchApp', []);
+var SearchApp = angular.module('SearchApp', ['ngTagsInput']);

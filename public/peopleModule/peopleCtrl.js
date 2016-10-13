@@ -6,13 +6,15 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
     $scope.query.name = [];
     $scope.isEnd = true;
 
+    $scope.tags = [];
+
     // Methods
 
     // Search button
     $scope.search = function(){
 
         // Split the query
-        var searchConditionals = $scope.searchQuery.split(' ');
+        var searchConditionals = $scope.searchQuery.split(/[ ,]+/);
 
         // Pass the array and check the conditions
         for (var i = 0; i < searchConditionals.length; i++)
@@ -57,8 +59,7 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
     $scope.ageCalc = function () {
 
         // Pass all the ages
-        for (var i = 0; i< $scope.peopleSearch.length; i++)
-        {
+        for (var i = 0; i< $scope.peopleSearch.length; i++) {
             $scope.peopleSearch[i].age =
                 moment($scope.peopleSearch[i].birthday).fromNow().split('years ago')[0];
         }
