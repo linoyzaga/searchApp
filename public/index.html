@@ -68,54 +68,31 @@
             <div ng-repeat="person in peopleSearch">
               <div class="cui__selector--direct__item">
                 <img class="user-avatar" src="{{person.avatar_origin}}" />
-
                 <div class="cui__selector--direct__label">
-                  <b>{{person.name}}<b>, {{person.age}}
+                  <b>{{person.name}}</b>, {{person.age}}
                 </div>
-
                 <p class="cui__selector--direct__description">
-                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}. <b>Phone:</b> {{person.phone}}.
+                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}.
+                </p>
+                <p class="cui__selector--direct__description">
+                  <b>Phone:</b> {{person.phone}}.
                 </p>
               </div>
             </div>
+            <br>
+            <div class="row input-group col-md-12 text-center">
+              <button class="btn btn-block" type="button" ng-click="loadMore()" ng-disabled="isEnd">Load More </button>
+            </div>
+            <br>
           </div>
         </div>
 
       </section>
     </div>
 
-    <section class="search">
-
-      <div class="results">
-
-        <div class="cui__selector--direct title">
-
-          <div class="cui__selector--direct__item">
-          <img class="user-avatar" src="anscombe.jpg" />
-
-          <div class="cui__selector--direct__label">
-            Elizabeth Anscombe, 33
-          </div>
-
-          <p class="cui__selector--direct__description">
-            <b>Address:</b> Mackenzie Av, 34. Toronto, Canada. <b>Phone:</b> 3294-36000.
-          </p>
-          </div>
-
-          <div class="cui__selector--direct__item">
-            <img class="user-avatar" src="tarski.jpg" />
-
-            <div class="cui__selector--direct__label">
-              Alfred Tarski
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
     <!-- Add all scripts -->
     <script src="vendor/angular.js"></script>
+    <script src="vendor/moment.js"></script>
     <script src="appModule.js"></script>
     <script src="peopleModule/peopleCtrl.js"></script>
     <script src="peopleModule/peopleFactory.js"></script>

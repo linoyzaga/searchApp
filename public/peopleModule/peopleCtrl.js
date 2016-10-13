@@ -1,11 +1,10 @@
-SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, getPeople) {
+SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope, peopleService) {
 
     // Init variables
     $scope.peopleSearch = [];
     $scope.query = {};
-    $scope.query.name = "";
-    $scope.query.age = "";
-    $scope.query.phone = "";
+    $scope.query.name = [];
+    $scope.isEnd = true;
 
     // Methods
 
@@ -21,15 +20,7 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
             // Check if it's a name (can end with dot)
             if ((/^[a-zA-Z]/.test(searchConditionals[i])) || (/^[a-zA-Z]+\.$/.test(searchConditionals[i]))) {
 
-                // Check if there is a name before and add a " "
-                if ($scope.query.name != "")
-                {
-                    $scope.query.name += " ";
-                }
-
-                // Add the name
-                var convertedName = searchConditionals[i].charAt(0).toUpperCase() + searchConditionals[i].substr(1).toLowerCase();
-                $scope.query.name += convertedName;
+                $scope.query.name.push(searchConditionals[i]);
             }
 
             // Check if there is a phone number
@@ -40,8 +31,7 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
             // Check if it is a age
             if (/^[0-9]{2}$/.test(searchConditionals[i])) {
 
-                var year = $scope.birthYearCalc(parseInt(searchConditionals[i]));
-                $scope.query.age = year;
+                $scope.query.age = parseInt(searchConditionals[i]);
             }
         }
 
@@ -49,42 +39,53 @@ SearchApp.controller('peopleCtrl', ['$scope', 'getPeople', function ($scope, get
         if ($scope.query == {}){$scope.results = [];}
 
         // Send the query to the server for results and save them
-        getPeople.getPeopleByQuery($scope.query).success(function (res) {
-            $scope.peopleSearch = res;
+        peopleService.getPeopleByQuery($scope.query).success(function (res) {
+            $scope.peopleSearch = res.docs;
+            $scope.isEnd = res.isEnd;
 
             // Calc the age
-            for (var i = 0; i< $scope.peopleSearch.length; i++)
-            {
-                $scope.peopleSearch[i].age = $scope.ageCalc($scope.peopleSearch[i].birthday);
-            }
+            $scope.ageCalc();
+
         }).error(function (error) {
             console.log(error);
         })
 
         // Clear the search conditions for the next query
-        /*$scope.query.name = "";
-        $scope.query.age = "";
-        $scope.query.phone = "";*/
+        $scope.initQuery();
     }
 
-    $scope.birthYearCalc = function (oldAge) {
-         var birthYear;
+    $scope.ageCalc = function () {
 
-        // Calculate the age
-        var todayDate = new Date();
-        var todayYear = todayDate.getFullYear();
+        // Pass all the ages
+        for (var i = 0; i< $scope.peopleSearch.length; i++)
+        {
+            $scope.peopleSearch[i].age =
+                moment($scope.peopleSearch[i].birthday).fromNow().split('years ago')[0];
+        }
+    }
+    
+    $scope.loadMore = function () {
 
-        birthYear = todayYear - oldAge;
+        peopleService.getMorePeopleForQuery().success(function (res) {
 
-        // Return value
-        return birthYear;
+            // Add the new array to the current array
+            for (var i = 0; i< res.docs.length; i++) {
+                $scope.peopleSearch.push(res.docs[i]);
+            }
+            $scope.isEnd = res.isEnd;
+
+            // Calc the age
+            $scope.ageCalc();
+        }).error(function (error) {
+            console.log(error);
+        })
     }
 
-    $scope.ageCalc = function (binaryDate) {
-        var age;
-
-        // Return value
-        return age;
+    $scope.initQuery = function () {
+        $scope.query = {};
+        $scope.query.name = [];
+        $scope.query.age = undefined;
+        $scope.query.phone = undefined;
     }
 
 }]);

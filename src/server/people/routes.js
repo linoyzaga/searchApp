@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var express = require('express');
 var People = require('./db').People;
 var router = express.Router();
+var queryResults = {};
 
 // Get all locations
 router.post('/', function(req, res) {
@@ -16,14 +17,54 @@ router.post('/', function(req, res) {
 
     People.find(query, {limit: 10}, function (err, docs) {
 
-        // Check the connection completed
+        // Check if there is are any results for query
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
 
+        console.log(docs[0].name);
+
+        // Init the queryResults variables
+        queryResults.docs = docs;
+        queryResults.numOfResults = 10;
+
+        if (docs.length > 10) {
+            queryResults.isEnd = false;
+        }
+        else {
+            queryResults.isEnd = true;
+        }
+
+        // Init the results to return
+        var resultsToReturn = {};
+        resultsToReturn.docs = docs.slice(0, 10);
+        resultsToReturn.isEnd = queryResults.isEnd;
+
         // Return value
-        res.send(docs);
+        res.send(resultsToReturn);
     });
+});
+
+router.get('/moreResults', function (req, res) {
+
+    // Upgrade he results number
+    queryResults.numOfResults += 10;
+
+    if (queryResults.docs.length > queryResults.numOfResults) {
+        queryResults.isEnd = false;
+    }
+    else {
+        queryResults.isEnd = true;
+    }
+
+    // Init the results to return
+    var resultsToReturn = {};
+    resultsToReturn.docs = queryResults.docs.slice(queryResults.numOfResults - 10, queryResults.numOfResults);
+    resultsToReturn.isEnd = queryResults.isEnd;
+
+    // Return value
+    res.send(resultsToReturn);
+
 });
 
 var queryBuilder = function (name, age, phone) {
@@ -32,25 +73,27 @@ var queryBuilder = function (name, age, phone) {
     var queryToReturn = {};
 
     // Add the name condition
-    if (name != "") {
-        queryToReturn.name = new RegExp(name, "i")
+    if (name.length > 0) {
+        queryToReturn.name = new RegExp(name.join(" "), 'i');
     }
 
     // Add the phone condition
-    if (phone != "") {
+    if (phone != undefined) {
         queryToReturn.phone = phone;
     }
 
     // Add the age condition
-    if (age != "") {
+    if (age != undefined) {
 
         var todayDate = new Date();
+        var thisYear = todayDate.getFullYear();
         var todayMonth = todayDate.getMonth() + 1;
         var todayDay = todayDate.getUTCDate();
+        var birthYear = (thisYear - age);
 
         // Calc the binary age
-        var beginOFYear = Date.parse(new Date(parseInt(01) + '/' + parseInt(01) + '/' + age)) / 10000;
-        var endOfYear = Date.parse(new Date(todayMonth + '/' + todayDay + '/' + age)) / 10000;
+        var beginOFYear = Date.parse(new Date('01' + '/' + '01' + '/' + birthYear)) / 1000;
+        var endOfYear = Date.parse(new Date(todayMonth + '/' + todayDay + '/' + birthYear)) / 1000;
 
         // Set the query for all the people who got this age in this year
         queryToReturn.birthday = {$gte: beginOFYear, $lt: endOfYear};
