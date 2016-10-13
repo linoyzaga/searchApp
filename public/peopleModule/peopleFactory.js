@@ -6,8 +6,8 @@ SearchApp.factory('peopleService', ['$http', function($http) {
         return $http.post('/people', {query: query});
     };
 
-    fac.getMorePeopleForQuery = function () {
-        return $http.get('/people/moreResults');
+    fac.getMorePeopleForQuery = function (query) {
+        return $http.post('/people/moreResults', {query: query});
     }
 
     return fac;

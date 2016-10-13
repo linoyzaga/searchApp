@@ -6,12 +6,13 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
     $scope.query.name = [];
     $scope.isEnd = true;
 
-    $scope.tags = [];
-
     // Methods
 
     // Search button
     $scope.search = function(){
+
+        // Clear the search conditions for the new query
+        $scope.initQuery();
 
         // Split the query
         var searchConditionals = $scope.searchQuery.split(/[ ,]+/);
@@ -37,9 +38,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
             }
         }
 
-        // Check if the query is defined
-        if ($scope.query == {}){$scope.results = [];}
-
         // Send the query to the server for results and save them
         peopleService.getPeopleByQuery($scope.query).success(function (res) {
             $scope.peopleSearch = res.docs;
@@ -51,9 +49,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
         }).error(function (error) {
             console.log(error);
         })
-
-        // Clear the search conditions for the next query
-        $scope.initQuery();
     }
 
     $scope.ageCalc = function () {
@@ -61,13 +56,16 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
         // Pass all the ages
         for (var i = 0; i< $scope.peopleSearch.length; i++) {
             $scope.peopleSearch[i].age =
-                moment($scope.peopleSearch[i].birthday).fromNow().split('years ago')[0];
+                moment($scope.peopleSearch[i].birthday).fromNow().split('years ago')[0] - 1;
         }
     }
     
     $scope.loadMore = function () {
 
-        peopleService.getMorePeopleForQuery().success(function (res) {
+        // Init more results, skip by 10
+        $scope.query.numToSkip += 10;
+
+        peopleService.getMorePeopleForQuery($scope.query).success(function (res) {
 
             // Add the new array to the current array
             for (var i = 0; i< res.docs.length; i++) {
@@ -87,6 +85,7 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
         $scope.query.name = [];
         $scope.query.age = undefined;
         $scope.query.phone = undefined;
+        $scope.query.numToSkip = 0;
     }
 
 }]);
