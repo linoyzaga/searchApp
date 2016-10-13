@@ -38,6 +38,8 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
             }
         }
 
+        $scope.query.numToSkip = 0;
+
         // Send the query to the server for results and save them
         peopleService.getPeopleByQuery($scope.query).success(function (res) {
             $scope.peopleSearch = res.docs;
@@ -65,7 +67,7 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
         // Init more results, skip by 10
         $scope.query.numToSkip += 10;
 
-        peopleService.getMorePeopleForQuery($scope.query).success(function (res) {
+        peopleService.getPeopleByQuery($scope.query).success(function (res) {
 
             // Add the new array to the current array
             for (var i = 0; i< res.docs.length; i++) {

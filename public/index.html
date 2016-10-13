@@ -65,17 +65,7 @@
             <h6>No results, please review your search or try a different one.</h6>
           </div>
           <div ng-if="peopleSearch.length > 0">
-            <div ng-repeat="person in peopleSearch" person="person">
-              <!--<div class="cui__selector&#45;&#45;direct__item">
-                <img class="user-avatar" src="{{person.avatar_origin}}" />
-                <div class="cui__selector&#45;&#45;direct__label">
-                  <b>{{person.name}}</b>, {{person.age}}
-                </div>
-                <p class="cui__selector&#45;&#45;direct__description">
-                  <b>Address:</b> {{person.address.street}}, {{person.address.city}}, {{person.address.country}}. <b>Phone:</b> {{person.phone}}.
-                </p>
-              </div>-->
-            </div>
+            <div ng-repeat="person in peopleSearch" person="person"></div>
             <br>
             <div class="row input-group col-md-12 text-center">
               <button class="btn btn-block" type="button" ng-click="loadMore()" ng-disabled="isEnd">Load More </button>

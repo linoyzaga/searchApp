@@ -3,40 +3,8 @@ var express = require('express');
 var People = require('./db').People;
 var router = express.Router();
 
-// Get all locations
-router.post('/', function(req, res) {
-
-    // Save the conditions into variables
-    var name = req.body.query.name;
-    var age = req.body.query.age;
-    var phone = req.body.query.phone;
-
-    // Build the query
-    var query = queryBuilder(name, age, phone);
-
-    People.find(query, function (err, docs) {
-
-        // Check if there is are any results for query
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        }
-
-                // Init the results to return
-        var resultsToReturn = {};
-        resultsToReturn.docs = docs;
-
-        if (resultsToReturn.docs.length < 10){
-            resultsToReturn.isEnd = true}
-        else {
-            resultsToReturn.isEnd = false;
-        }
-
-        // Return value
-        res.send(resultsToReturn);
-    }).limit(10);
-});
-
-router.post('/moreResults', function (req, res) {
+// Get all people by query
+router.post('/', function (req, res) {
 
     // Save the conditions into variables
     var name = req.body.query.name;
