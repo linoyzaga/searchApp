@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./src/server/routes');
 
 // configuration ======================================================================================================
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
 
 // Used for production build

@@ -3,7 +3,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
     // Init variables
     $scope.peopleSearch = [];
     $scope.query = {};
-    $scope.query.name = [];
     $scope.isEnd = true;
 
     // Methods
@@ -22,7 +21,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
         {
             // Check if it's a name (can end with dot)
             if ((/^[a-zA-Z]/.test(searchConditionals[i])) || (/^[a-zA-Z]+\.$/.test(searchConditionals[i]))) {
-
                 $scope.query.name.push(searchConditionals[i]);
             }
 
@@ -37,8 +35,6 @@ SearchApp.controller('peopleCtrl', ['$scope', 'peopleService', function ($scope,
                 $scope.query.age = parseInt(searchConditionals[i]);
             }
         }
-
-        $scope.query.numToSkip = 0;
 
         // Send the query to the server for results and save them
         peopleService.getPeopleByQuery($scope.query).success(function (res) {
